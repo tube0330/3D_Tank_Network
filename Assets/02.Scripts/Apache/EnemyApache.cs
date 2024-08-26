@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine.Utility;
 using Photon.Pun;
 using UnityEngine;
 
@@ -23,7 +22,6 @@ public class EnemyApache : MonoBehaviourPun
     float maxDelay = 3f;
     GameObject[] playerTanks = null;
     string playerTag = "Player";
-    string apacheTag = "APACHE";
     Transform target;
 
     void Awake()
