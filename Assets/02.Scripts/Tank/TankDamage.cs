@@ -10,9 +10,10 @@ public class TankDamage : MonoBehaviourPun
     [SerializeField] private GameObject expEffect;
 
     private int initHp = 100;
-    private int curHp = 0;
+    [SerializeField]private int curHp = 0;
 
     private readonly string playerTag = "Player";
+    string apacheTag = "APACHE";
 
     public Canvas hudCanvas;
     public Image HpBar;
@@ -27,10 +28,11 @@ public class TankDamage : MonoBehaviourPun
     }
 
     [PunRPC]
-    void OnDamageRPC(string Tag) //Sendmessage�� ȣ���Ͽ� ���
-    { //��Ʈ��ũ �󿡼� ������ ó���� ����ȭ
-        if (curHp > 0 && Tag == playerTag)
+    void OnDamageRPC(string tag)
+    {
+        if (curHp > 0 && tag == playerTag)
         {
+            //Debug.Log(playerTag);
             curHp -= 25;
             HpBar.fillAmount = (float)curHp / (float)initHp;
             if (HpBar.fillAmount <= 0.4f)
@@ -42,6 +44,20 @@ public class TankDamage : MonoBehaviourPun
             {
                 StartCoroutine(ExplosionTank());
             }
+        }
+
+        else if (curHp > 0 && tag == apacheTag)
+        {
+            Debug.Log(curHp);
+            curHp -= 1;
+            HpBar.fillAmount = (float)curHp / (float)initHp;
+            if (HpBar.fillAmount <= 0.4f)
+                HpBar.color = Color.red;
+            else if (HpBar.fillAmount <= 0.6f)
+                HpBar.color = Color.yellow;
+
+            if (curHp <= 0)
+                StartCoroutine(ExplosionTank());
         }
     }
 

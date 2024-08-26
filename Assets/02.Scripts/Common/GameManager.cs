@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public bool isGameOver = false;
     public Text connectText;
     public Text logMsgText;
+    public Text killText;
+    public int killCnt = 0;
 
     void Awake()
     {
@@ -38,6 +40,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void Update()
     {
         GetConnectPlayerCount();
+        SetKillCount();
     }
 
     void Start()
@@ -136,5 +139,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     void LogMessage(string message)
     {
         logMsgText.text += message;
+    }
+
+    void SetKillCount()
+    {
+        killText.text = $"KILL: {killCnt}";
     }
 }

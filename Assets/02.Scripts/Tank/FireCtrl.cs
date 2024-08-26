@@ -11,6 +11,7 @@ public class FireCtrl : MonoBehaviourPun
     public LeaserBeamT BeamT = null;
     public GameObject expEffect;
     private readonly string playerTag = "Player";
+    readonly string apacheTag = "APACHE";
 
     void Start()
     {
@@ -44,10 +45,12 @@ public class FireCtrl : MonoBehaviourPun
             ShowEffect(hit);
             if (hit.collider.CompareTag(playerTag))
             {
-                string tag = hit.collider.tag;
+                //string tag = hit.collider.tag;
                 hit.collider.transform.parent.SendMessage("OnDamage", tag, SendMessageOptions.DontRequireReceiver);
-
             }
+
+            else if(hit.collider.CompareTag(apacheTag))
+            hit.collider.transform.parent.SendMessage("OnDamage", playerTag, SendMessageOptions.DontRequireReceiver);
 
         }
         else

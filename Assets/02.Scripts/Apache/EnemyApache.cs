@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine.Utility;
 using Photon.Pun;
 using UnityEngine;
+
 
 public class EnemyApache : MonoBehaviourPun
 {
@@ -18,7 +20,11 @@ public class EnemyApache : MonoBehaviourPun
     [SerializeField] LeaserBeam[] leaserBeams;
     public GameObject expEffect;
     float curDelay = 0f;
-    float maxDelay = 1f;
+    float maxDelay = 3f;
+    GameObject[] playerTanks = null;
+    string playerTag = "Player";
+    string apacheTag = "APACHE";
+    Transform target;
 
     void Awake()
     {
@@ -39,10 +45,10 @@ public class EnemyApache : MonoBehaviourPun
         A_bullet = Resources.Load<GameObject>("A_Bullet");
         expEffect = Resources.Load<GameObject>("Explosion");
     }
-    
+
     void Update()
     {
-        if(PhotonNetwork.IsConnected)
+        if (PhotonNetwork.IsConnected)
         {
             if (isSearch)
                 WayPointMove();
@@ -110,38 +116,93 @@ public class EnemyApache : MonoBehaviourPun
 
         if (TankFindDist <= 80f)
             isSearch = false; */
+
+        playerTanks = GameObject.FindGameObjectsWithTag(playerTag);
+        target = playerTanks[0].transform;
+        float dist = Vector3.Distance(tr.position, target.position);
+        float distAll;
+
+        foreach (var tank in playerTanks)
+        {
+            distAll = (tank.transform.position - tr.position).magnitude; //foreach 돌면서 아파치에서 탱크 배열에 들어간 오브젝트들의 거리를 다 구함
+
+            if (distAll < dist)
+            {
+                target = tank.transform;
+                distAll = dist;
+            }
+
+            if (Vector3.Distance(target.position, target.position) < 80f)
+                isSearch = false;
+        }
     }
 
     void Attack()
     {
-        Vector3 targetDist = GameObject.FindWithTag("Player").transform.position - tr.position;
-        tr.rotation = Quaternion.Slerp(tr.rotation, Quaternion.LookRotation(targetDist.normalized), Time.deltaTime * rotSpeed);
+        playerTanks = GameObject.FindGameObjectsWithTag(playerTag);
+        Transform target = playerTanks[0].transform;
+        //첫번째 배열요소에 있는 탱크의 위치와 아파치 헬기의 거리를 잰다
+        //첫번째 배열 요소의 탱크의 포지션은 거리를 재기 위한 기준이 될 뿐이다.
+        float dist = (target.position - tr.position).magnitude;
+        float dist2D;
 
-        if (targetDist.magnitude > 80f)
+        foreach (GameObject tank in playerTanks)
+        {
+
+            //첫번째 요소의 탱크 포지션 기준으로 아파치 헬기와 탱크들의 전체거리를 잰다.
+
+            dist2D = (tank.transform.position - tr.position).magnitude;
+
+            if (dist2D < dist)
+            {
+                target = tank.transform;
+                dist = (tank.transform.position - tr.position).magnitude;
+            }
+
+        }
+
+        Vector3 _normal = target.position - tr.position;
+
+        tr.rotation = Quaternion.Slerp(tr.rotation, Quaternion.LookRotation(_normal), Time.deltaTime * 3.0f);
+
+        FireRay();
+
+        if (Vector3.Distance(target.position, target.position) >= 80f)
             isSearch = true;
+    }
+
+
+    void FireRay()
+    {
+        curDelay -= Time.deltaTime;
+
+        if (curDelay <= 0)
+            curDelay = maxDelay;
+
+        else return;
 
         Ray ray = new Ray(FirePos1.position, FirePos1.forward * 100f);
         Ray ray1 = new Ray(FirePos2.position, FirePos2.forward * 100f);
         RaycastHit hit;
         //RaycastHit hit1;
 
+
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 9) || Physics.Raycast(ray1, out hit, Mathf.Infinity, 1 << 9))
         {
-            curDelay -= 0.01f;
-
-            if (curDelay <= 0)
+            if (hit.collider.CompareTag(playerTag))
             {
-                curDelay = maxDelay;
-                leaserBeams[0].FireRay();
-                leaserBeams[1].FireRay();
-                ShowEffect(hit);
+                //string tag = hit.collider.tag;
+                hit.collider.transform.parent.SendMessage("OnDamage", tag, SendMessageOptions.DontRequireReceiver);
             }
+            leaserBeams[0].FireRay();
+            leaserBeams[1].FireRay();
+            ShowEffect(hit);
         }
-        else
+        /* else
         {
             GameObject hiteff1 = Instantiate(expEffect, tr.InverseTransformPoint(ray.GetPoint(200f)), Quaternion.identity);
             Destroy(hiteff1, 2.0f);
-        }
+        } */
 
     }
 

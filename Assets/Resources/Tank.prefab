@@ -1054,6 +1054,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Renderer: []
   expEffect: {fileID: 0}
+  curHp: 0
   hudCanvas: {fileID: 1816036084694976054}
   HpBar: {fileID: 8653782637383309623}
 --- !u!114 &3936481549260489065
