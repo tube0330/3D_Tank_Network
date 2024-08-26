@@ -105,7 +105,7 @@ public class PhotonInit : MonoBehaviourPunCallbacks
             GameObject room = (GameObject)Instantiate(roomItem);
             room.transform.SetParent(scrollContents.transform, false);
 
-            RoomData roomData = room.GetComponent<RoomData>();
+            RoomData roomData = room.GetComponent<RoomData>();    //roomItem에 RoomData script 있음
             roomData.roomName = roomInfo.Name;
             roomData.connectPlayer = roomInfo.PlayerCount;
             roomData.maxPlayer = roomInfo.MaxPlayers;

@@ -37,12 +37,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.IsMessageQueueRunning = true;
     }
 
-    void Update()
-    {
-        GetConnectPlayerCount();
-        SetKillCount();
-    }
-
     void Start()
     {
         var spawnPoint = GameObject.Find("SpawnPoints").gameObject;
@@ -58,7 +52,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         InvokeRepeating("CreateApache", 0.01f, 3.0f);
     }
 
-    #region Start Coroutine
+    void Update()
+    {
+        GetConnectPlayerCount();
+        SetKillCount();
+    }
+
+    #region StartCoroutine
    /*  IEnumerator CreateApache()
     {
        while (isGameOver == false)

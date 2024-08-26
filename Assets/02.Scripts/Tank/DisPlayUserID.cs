@@ -4,13 +4,13 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 
-public class DisPlayUserID : MonoBehaviourPun
+public class DisplayUserID : MonoBehaviourPun
 {
     public Text UserID;
     void Start()
     {
         UserID.text = photonView.Owner.NickName;
-         // ¾ÆÀÌµð¸¦ ÅÊÅ© ¿¡ Ç¥½Ã 
+         // ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½Å© ï¿½ï¿½ Ç¥ï¿½ï¿½ 
     }
     
 }
