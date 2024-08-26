@@ -22,6 +22,7 @@ public class EnemyApache : MonoBehaviourPun
     float maxDelay = 3f;
     GameObject[] playerTanks = null;
     string playerTag = "Player";
+    string apacheTag = "APACHE";
     Transform target;
 
     void Awake()
@@ -190,7 +191,7 @@ public class EnemyApache : MonoBehaviourPun
             if (hit.collider.CompareTag(playerTag))
             {
                 //string tag = hit.collider.tag;
-                hit.collider.transform.parent.SendMessage("OnDamage", tag, SendMessageOptions.DontRequireReceiver);
+                hit.collider.transform.parent.SendMessage("OnDamage", apacheTag, SendMessageOptions.DontRequireReceiver);
             }
             leaserBeams[0].FireRay();
             leaserBeams[1].FireRay();

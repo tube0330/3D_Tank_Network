@@ -7,17 +7,12 @@ public class ApacheDamage : MonoBehaviourPun
 {
     [SerializeField] MeshRenderer[] meshren;
     [SerializeField] GameObject explotionEff;
-
-    int hp = 0;
-    int initHp = 100;
     readonly string tankTag = "Player";
 
     void Start()
     {
         meshren = GetComponentsInChildren<MeshRenderer>();
         explotionEff = Resources.Load<GameObject>("Explosion");
-
-        hp = initHp;
     }
 
     [PunRPC]
