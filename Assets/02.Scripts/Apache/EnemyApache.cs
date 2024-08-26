@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using Photon.Pun;
 using UnityEngine;
 
-public class EnemyApache : MonoBehaviour
+public class EnemyApache : MonoBehaviourPun
 {
     [Header("Patrol")]
     public List<Transform> patrolList = new List<Transform>();
@@ -20,6 +20,12 @@ public class EnemyApache : MonoBehaviour
     float curDelay = 0f;
     float maxDelay = 1f;
 
+    void Awake()
+    {
+        photonView.Synchronization = ViewSynchronization.Unreliable;
+        photonView.ObservedComponents[0] = this;
+    }
+
     void Start()
     {
         leaserBeams[0] = GetComponentsInChildren<LeaserBeam>()[0];
@@ -33,15 +39,19 @@ public class EnemyApache : MonoBehaviour
         A_bullet = Resources.Load<GameObject>("A_Bullet");
         expEffect = Resources.Load<GameObject>("Explosion");
     }
+    
     void Update()
     {
-        if (isSearch)
-            WayPointMove();
+        if(PhotonNetwork.IsConnected)
+        {
+            if (isSearch)
+                WayPointMove();
 
-        else
-            Attack();
-
+            else
+                Attack();
+        }
     }
+
     void WayPointMove()
     {
         Vector3 PointDist = Vector3.zero;
@@ -96,13 +106,12 @@ public class EnemyApache : MonoBehaviour
 
     void Search()
     {
-
-        float TankFindDist = (GameObject.FindWithTag("Player").transform.position - tr.position).magnitude;
+        /* float TankFindDist = (GameObject.FindWithTag("Player").transform.position - tr.position).magnitude;
 
         if (TankFindDist <= 80f)
-            isSearch = false;
-
+            isSearch = false; */
     }
+
     void Attack()
     {
         Vector3 targetDist = GameObject.FindWithTag("Player").transform.position - tr.position;
@@ -115,6 +124,7 @@ public class EnemyApache : MonoBehaviour
         Ray ray1 = new Ray(FirePos2.position, FirePos2.forward * 100f);
         RaycastHit hit;
         //RaycastHit hit1;
+
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 9) || Physics.Raycast(ray1, out hit, Mathf.Infinity, 1 << 9))
         {
             curDelay -= 0.01f;
@@ -134,6 +144,7 @@ public class EnemyApache : MonoBehaviour
         }
 
     }
+
     void ShowEffect(RaycastHit hit)
     {
         Vector3 hitPos = hit.point;

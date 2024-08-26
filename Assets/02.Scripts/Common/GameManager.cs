@@ -50,40 +50,36 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         string msg = "\n<color=#00ff00>[" + PhotonNetwork.NickName + "]Connected</color>";
         photonView.RPC(nameof(LogMessage), RpcTarget.AllBuffered, msg);
+
+        if(spawnList.Count > 0 && PhotonNetwork.IsMasterClient) 
+        InvokeRepeating("CreateApache", 0.01f, 3.0f);
     }
 
-    #region
-    //IEnumerator CreateApache()
-    //{
-    //    while (isGameOver == false)
-    //    {
+    #region Start Coroutine
+   /*  IEnumerator CreateApache()
+    {
+       while (isGameOver == false)
+       {
 
 
-    //        int count = (int)GameObject.FindGameObjectsWithTag("APACHE").Length;
-    //        if (count < 10)
-    //        {
-    //            yield return new WaitForSeconds(3.0f);
-    //            int idx = Random.Range(0, spawnList.Count);
-    //            Instantiate(apachePrefab, spawnList[idx].position, spawnList[idx].rotation);
+           int count = (int)GameObject.FindGameObjectsWithTag("APACHE").Length;
+           if (count < 10)
+           {
+               yield return new WaitForSeconds(3.0f);
+               int idx = Random.Range(0, spawnList.Count);
+               Instantiate(apachePrefab, spawnList[idx].position, spawnList[idx].rotation);
+           }
+           else
+               yield return null;
+       }
 
-
-    //        }
-    //        else
-    //        {
-    //            yield return null;
-    //        }
-
-
-    //    }
-
-    //}
+    } */
     #endregion
 
     void CreateTank()
     {
         float pos = Random.Range(-50f, 50f);
         PhotonNetwork.Instantiate("Tank", new Vector3(pos, 5f, pos), Quaternion.identity, 0);
-
     }
 
     void CreateApache()
@@ -95,18 +91,22 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (count < 10)
         {
             int idx = Random.Range(0, spawnList.Count);
-            Instantiate(apachePrefab, spawnList[idx].position, spawnList[idx].rotation);
+            PhotonNetwork.InstantiateRoomObject("Apache", spawnList[idx].position, spawnList[idx].rotation, 0, null);
         }
     }
+
+    [PunRPC]
+    public void ApplyPlayerCountUpdate()
+    {
+        Room curRoom = PhotonNetwork.CurrentRoom;
+        connectText.text = curRoom.PlayerCount.ToString() + " / " + curRoom.MaxPlayers.ToString();
+    }
+
     [PunRPC]
     void GetConnectPlayerCount()
     {
         if (PhotonNetwork.IsMasterClient)
-        {
-            Room curRoom = PhotonNetwork.CurrentRoom;
-            connectText.text = curRoom.PlayerCount.ToString() + " / " + curRoom.MaxPlayers.ToString();
-            photonView.RPC(nameof(GetConnectPlayerCount), RpcTarget.Others);
-        }
+            photonView.RPC(nameof(ApplyPlayerCountUpdate), RpcTarget.All);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         string msg = "\n<color=#ff0000>[" + PhotonNetwork.NickName + "]DisConnected</color>";
         photonView.RPC(nameof(LogMessage), RpcTarget.AllBuffered, msg);
-        
+
         PhotonNetwork.LeaveRoom();
     }
 
