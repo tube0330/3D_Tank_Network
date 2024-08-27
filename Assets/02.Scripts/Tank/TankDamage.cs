@@ -4,19 +4,21 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 
-public class TankDamage : MonoBehaviourPun
+public class TankDamage : MonoBehaviourPunCallbacks
 {
     [SerializeField] private MeshRenderer[] m_Renderer;
     [SerializeField] private GameObject expEffect;
 
     private int initHp = 100;
-    [SerializeField]private int curHp = 0;
+    [SerializeField] private int curHp = 0;
 
-    private readonly string playerTag = "Player";
+    string playerTag = "Player";
     string apacheTag = "APACHE";
 
     public Canvas hudCanvas;
     public Image HpBar;
+    public int killScore = 0;
+    public Text killTxt;
 
     void Start()
     {
@@ -57,7 +59,10 @@ public class TankDamage : MonoBehaviourPun
                 HpBar.color = Color.yellow;
 
             if (curHp <= 0)
+            {
                 StartCoroutine(ExplosionTank());
+                Die(PhotonNetwork.LocalPlayer.ActorNumber);
+            }
         }
     }
 
@@ -88,4 +93,18 @@ public class TankDamage : MonoBehaviourPun
         foreach (var tank in m_Renderer)
             tank.enabled = isvisible;
     }
+
+    public void OnKilled(int killActorNumber)
+    {
+        //if (photonView.IsMine) PhotonNetwork.Destroy(gameObject);   //자신이 죽었을 경우
+
+        if (killActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)   //자신이 죽인 경우 killscore++
+        {
+            killScore++;
+            killTxt.text = "Tank kill" + killScore.ToString();
+            Debug.Log(killScore);
+        }
+    }
+
+    public void Die(int killActorNumber) => photonView.RPC(nameof(OnKilled), RpcTarget.All, killActorNumber);
 }

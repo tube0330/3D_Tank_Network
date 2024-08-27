@@ -45,7 +45,7 @@ public class FireCtrl : MonoBehaviourPun
             ShowEffect(hit);
             if (hit.collider.CompareTag(playerTag))
             {
-                //string tag = hit.collider.tag;
+                string tag = hit.collider.tag;
                 hit.collider.transform.parent.SendMessage("OnDamage", tag, SendMessageOptions.DontRequireReceiver);
             }
 

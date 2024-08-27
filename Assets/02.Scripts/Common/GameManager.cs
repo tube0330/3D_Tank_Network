@@ -5,6 +5,7 @@ using UnityEngine;
 using Photon.Realtime;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -25,8 +26,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     public bool isGameOver = false;
     public Text connectText;
     public Text logMsgText;
-    public Text killText;
-    public int killCnt = 0;
+    public Text apacheKillText;
+    public int apacheKillCnt = 0;
+    //public Text tankKillText;
+    //public int tankKillCnt = 0;
 
     void Awake()
     {
@@ -35,6 +38,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         apachePrefab = Resources.Load<GameObject>("Apache");
         CreateTank();
         PhotonNetwork.IsMessageQueueRunning = true;
+        //tankKillText = Resources.Load<GameObject>("Tank").transform.GetChild(6).GetChild(4).GetComponent<Text>();
     }
 
     void Start()
@@ -55,7 +59,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     void Update()
     {
         GetConnectPlayerCount();
-        SetKillCount();
+        SetApacheKillCount();
+        //SetTankKillCount();
     }
 
     #region StartCoroutine
@@ -136,13 +141,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void LogMessage(string message)
-    {
-        logMsgText.text += message;
-    }
+    void LogMessage(string message) => logMsgText.text += message;
 
-    void SetKillCount()
-    {
-        killText.text = $"KILL: {killCnt}";
-    }
+    void SetApacheKillCount() => apacheKillText.text = $"KILL: {apacheKillCnt}";
+
+    //[PunRPC]
+    //void SetTankKillCount() => tankKillText.text = $"KILL: {tankKillCnt}";
 }

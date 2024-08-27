@@ -25,7 +25,7 @@ public class ApacheDamage : MonoBehaviourPun
             Destroy(eff, 1.0f);
             
             SetApacheVisible(false);
-            GameManager.Instance.killCnt++;
+            GameManager.Instance.apacheKillCnt++;
         }
     }
 

@@ -524,8 +524,10 @@ MonoBehaviour:
   isGameOver: 0
   connectText: {fileID: 2104817520}
   logMsgText: {fileID: 1824601066}
-  killText: {fileID: 1794088129}
-  killCnt: 0
+  apacheKillText: {fileID: 1794088129}
+  tankKillText: {fileID: 0}
+  apacheKillCnt: 0
+  tankKillCnt: 0
 --- !u!4 &598990068
 Transform:
   m_ObjectHideFlags: 0

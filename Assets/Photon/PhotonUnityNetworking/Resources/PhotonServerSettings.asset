@@ -45,6 +45,7 @@ MonoBehaviour:
   - GetConnectPlayerCount
   - ApplyPlayerCountUpdate
   - FireRay
+  - SetTankKillCount
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
