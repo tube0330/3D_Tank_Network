@@ -15,7 +15,6 @@ public class FireCtrl : MonoBehaviourPun
     readonly string apacheTag = "APACHE";
 
     PlayerInput playerInput;
-    InputActionMap playerMap;
     InputAction fireAction;
 
 
@@ -27,8 +26,7 @@ public class FireCtrl : MonoBehaviourPun
         expEffect = Resources.Load<GameObject>("Explosion");
 
         playerInput = GetComponent<PlayerInput>();
-        playerMap = playerInput.actions.FindActionMap("Player");
-        fireAction = playerMap.FindAction("Fire");
+        fireAction = playerInput.actions["Fire"];
     }
 
     void Update()

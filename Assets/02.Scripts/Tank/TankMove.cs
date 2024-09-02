@@ -15,9 +15,10 @@ public class TankMove : MonoBehaviourPun, IPunObservable
     float moveSpeed = 20f;
 
     [Header("PlayerInput")]
-    [SerializeField] PlayerInput playerInput;
+    [SerializeField] PlayerInput playerInput = null;
     [SerializeField] InputActionMap playerMap;
     [SerializeField] InputAction moveAction;
+    //[SerializeField] InputAction rotateAction;
     Vector3 moveDir = Vector3.zero;
 
     void Awake()
@@ -29,19 +30,14 @@ public class TankMove : MonoBehaviourPun, IPunObservable
         rb.centerOfMass = new Vector3(0, -0.5f, 0);
         curPos = tr.position;
         curRot = tr.rotation;
+    }
 
+    void Start()
+    {
         playerInput = GetComponent<PlayerInput>();
         playerMap = playerInput.actions.FindActionMap("Player");
-        moveAction = playerMap.FindAction("Move");
-        moveAction.performed += context =>
-        {
-            Vector2 dir = context.ReadValue<Vector2>();
-            moveDir = new Vector3(dir.x, 0, dir.y);
-        };
-        moveAction.canceled += context =>
-        {
-            moveDir = Vector3.zero;
-        };
+        moveAction = playerInput.actions["Move"];
+        //rotateAction = playerMap.FindAction("Rotate");
     }
 
     void Update()
@@ -53,6 +49,9 @@ public class TankMove : MonoBehaviourPun, IPunObservable
 
             tr.Translate(Vector3.forward * v * Time.deltaTime * moveSpeed);
             tr.Rotate(Vector3.up * h * Time.deltaTime * rotSpeed); */
+
+            Vector2 dir = moveAction.ReadValue<Vector2>();
+            moveDir = new Vector3(dir.x, 0f, dir.y);
 
             if (moveDir != Vector3.zero)
             {
@@ -80,13 +79,5 @@ public class TankMove : MonoBehaviourPun, IPunObservable
             curPos = (Vector3)stream.ReceiveNext();
             curRot = (Quaternion)stream.ReceiveNext();
         }
-    }
-
-    void OnMove(InputValue value)
-    {
-        Vector2 dir = value.Get<Vector2>();
-        Debug.Log($"Move = {dir.x}, {dir.y}");
-
-        moveDir = new Vector3(dir.x, 0, dir.y);
     }
 }
