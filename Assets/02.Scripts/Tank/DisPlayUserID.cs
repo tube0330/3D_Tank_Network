@@ -10,7 +10,6 @@ public class DisplayUserID : MonoBehaviourPun
     void Start()
     {
         UserID.text = photonView.Owner.NickName;
-         // ���̵� ��ũ �� ǥ�� 
     }
     
 }

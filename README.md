@@ -6,3 +6,6 @@
 
 # 240824
 1. Tank
+
+# 240902
+1. Legacy -> Input System 키보드로 조종 변경

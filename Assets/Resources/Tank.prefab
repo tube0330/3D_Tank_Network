@@ -1033,6 +1033,7 @@ GameObject:
   - component: {fileID: 3936481549260489065}
   - component: {fileID: 4493919048291120608}
   - component: {fileID: 8576806843193649156}
+  - component: {fileID: 2071531696184362614}
   m_Layer: 9
   m_Name: Tank
   m_TagString: Player
@@ -1103,6 +1104,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   rotSpeed: 90
+  playerInput: {fileID: 0}
+  playerMap:
+    m_Name: Player Map
+    m_Id: 7bf538cf-fc68-4dbe-9ea1-1f2827190bff
+    m_Asset: {fileID: 0}
+    m_Actions: []
+    m_Bindings: []
+  moveAction:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: cd791718-68a0-4617-9330-1e2a41d6d02a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!114 &4322224191808265486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1191,6 +1208,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UserID: {fileID: 2141905383122360623}
+--- !u!114 &2071531696184362614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543448935353520352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 052087dadb3763240afd4eed8efbe9be, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &6128065406475912917
 GameObject:
   m_ObjectHideFlags: 0

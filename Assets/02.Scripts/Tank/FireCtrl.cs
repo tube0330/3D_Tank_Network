@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class FireCtrl : MonoBehaviourPun
 {
@@ -13,12 +14,21 @@ public class FireCtrl : MonoBehaviourPun
     private readonly string playerTag = "Player";
     readonly string apacheTag = "APACHE";
 
+    PlayerInput playerInput;
+    InputActionMap playerMap;
+    InputAction fireAction;
+
+
     void Start()
     {
         bullet = Resources.Load<GameObject>("Bullet");
         firePos = transform.GetChild(4).GetChild(1).GetChild(0).GetChild(0).transform;
         BeamT = GetComponentInChildren<LeaserBeamT>();
         expEffect = Resources.Load<GameObject>("Explosion");
+
+        playerInput = GetComponent<PlayerInput>();
+        playerMap = playerInput.actions.FindActionMap("Player");
+        fireAction = playerMap.FindAction("Fire");
     }
 
     void Update()
@@ -26,10 +36,19 @@ public class FireCtrl : MonoBehaviourPun
         //if (EventSystem.current.IsPointerOverGameObject()) return;
         if (Hover.Event_instance.isEnter) return;
 
-        if (Input.GetMouseButtonDown(0) && photonView.IsMine)
+        /* if (Input.GetMouseButtonDown(0) && photonView.IsMine)
         {
             Fire();
             photonView.RPC("Fire", RpcTarget.Others);
+        } */
+
+        if (photonView.IsMine)
+        {
+            fireAction.performed += context =>
+            {
+                Fire();
+                Debug.Log("Attack by C# Events");
+            };
         }
     }
 
@@ -49,8 +68,8 @@ public class FireCtrl : MonoBehaviourPun
                 hit.collider.transform.parent.SendMessage("OnDamage", tag, SendMessageOptions.DontRequireReceiver);
             }
 
-            else if(hit.collider.CompareTag(apacheTag))
-            hit.collider.transform.parent.SendMessage("OnDamage", playerTag, SendMessageOptions.DontRequireReceiver);
+            else if (hit.collider.CompareTag(apacheTag))
+                hit.collider.transform.parent.SendMessage("OnDamage", playerTag, SendMessageOptions.DontRequireReceiver);
 
         }
         else
